@@ -1,7 +1,5 @@
 const bcrypt = require('bcryptjs')
 const { Op } = require('sequelize')
-const imgur = require('imgur-node-api')
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const db = require('../models')
 const User = db.User
 const Tweet = db.Tweet
@@ -10,17 +8,7 @@ const Like = db.Like
 const Followship = db.Followship
 const helpers = require('../_helpers')
 
-const getLink = (filePath) => {
-  return new Promise((resolve, reject) => {
-    imgur.setClientID(IMGUR_CLIENT_ID)
-    imgur.upload(filePath, (err, img) => {
-      if (err) {
-        return reject(err)
-      }
-      return resolve(img.data.link)
-    })
-  })
-}
+
 
 const userController = {
   signUpPage: (req, res) => {
@@ -141,21 +129,17 @@ const userController = {
         return res.json(user.toJSON())
       })
   },
-  postUser: async (req, res) => {
+  postUser: (req, res) => {
     const { name, introduction } = req.body
     const { files } = req
-    let coverLink
-    let avatarLink
 
     if (files) {
-      if (files.cover) {
-        coverLink = await getLink(files.cover[0].path)
-      }
-      if (files.avatar) {
-        avatarLink = await getLink(files.avatar[0].path)
-      }
-      return User.findByPk(req.params.userId)
-        .then((user) => {
+      Promise.all([
+        helpers.getImgurLink(files.cover),
+        helpers.getImgurLink(files.avatar),
+        User.findByPk(req.params.userId)
+      ])
+        .then(([coverLink, avatarLink, user]) => {
           return user.update({
             name,
             introduction,
