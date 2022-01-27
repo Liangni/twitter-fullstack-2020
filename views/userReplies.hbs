@@ -69,9 +69,9 @@
         {{/if}}
       </div>
       {{!-- edit-user-button --}}
-      <div class="d-flex justify-content-end mt-1 pr-1">
+      <div class="d-flex justify-content-end mt-1 pr-1" id="user-profile-control-panel">
         {{#ifCond loginUser.id user.id }}
-        <button type="button" class="btn btn-outline ml-2" data-toggle="modal" data-target="#editUserModal">
+        <button type="button" class="btn btn-outline ml-2" id="edit-user-button" data-user-id="{{ user.id }}" data-toggle="modal" data-target="#editUserModal">
           編輯個人資料
         </button>
         {{else}}
@@ -175,3 +175,5 @@
     {{> popular}}
   </div> 
 </div>
+
+<script src="/javascripts/userProfile.js"></script>
