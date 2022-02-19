@@ -1,0 +1,31 @@
+<div class="modal fade" id="tweetModal" tabindex="-1" role="dialog" aria-labelledby="reply-tweet" style="display: none;"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content d-flex">
+      <button type="button" class="btn-dismiss close d-flex justify-content-start ml-3 mt-2"
+        data-dismiss="modal">x</button>
+      <hr />
+      <form action="/tweets" method="POST">
+        <div class="type-area d-flex">
+          <div class="avatar">
+            <a href="/users/{{user.id}}/tweets">
+              {{#if user.avatar}}
+              <img src="{{user.avatar}}" class="avatar small ml-1">
+              {{else}}
+              <img class="preset-avatar ml-1" src="https://i.imgur.com/iuHA5Qi.jpg">
+              {{/if}}
+            </a>
+          </div>
+          <div class="type-text">
+            <textarea type="text" class="tweet-post-content form-control mb-2 ml-2" id="description-modal"
+              name="description" placeholder="有什麼新鮮事?" rows="5" cols="47"></textarea>
+            <div class="invalid-feedback" id="add-tweet"></div>
+          </div>
+        </div>
+        <div class="add-button d-flex justify-content-end mr-2">
+          <button type="submit" class="btn mb-2" id="modal-post-button">推文</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
