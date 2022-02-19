@@ -1,8 +1,7 @@
-//推文
 const addTweet = document.querySelector('#description-modal')
 const addButton = document.querySelector('#modal-post-button')
 
-//推文
+// 輸入推文
 addTweet.addEventListener('input', function check(event) {
   if (addTweet.value.length < 1) {
     addTweet.classList.add('is-invalid')
@@ -17,7 +16,7 @@ addTweet.addEventListener('input', function check(event) {
   }
 })
 
-//更改個人資料
+// 送出推文
 addButton.addEventListener('click', function check(event) {
   if (addTweet.value.length < 1) {
     addTweet.classList.add('is-invalid')
@@ -30,4 +29,3 @@ addButton.addEventListener('click', function check(event) {
     event.preventDefault()
   }
 })
-
