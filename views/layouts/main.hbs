@@ -46,59 +46,8 @@
   <div class="wrap d-flex mt-3">
     {{{body}}}
   </div>
-  {{!-- Edit-User-Modal --}}
-  <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="edituserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form action="/api/users/{{ user.id }}" method="POST" enctype="multipart/form-data">
-          <div class="modal-header">
-            <div class="d-flex">
-              <button type="button" class="btn-dismiss close mr-3" data-dismiss="modal">X</button>
-              <h5 class="modal-title" id="exampleModalLabel">編輯個人資料</h5>
-            </div>
-            <button type="submit" class="btn">儲存</button>
-          </div>
-          <div class="modal-body px-0">
-            <div class="image-wrapper">
-              {{!-- Edit Cover --}}
-              <div class="cover-wrapper" id="cover-wrapper">
-                <div class="cover none" id="current-cover"></div>
-              </div>
-              <div class="cover-input-wrapper d-flex" id="cover-input-wrapper">
-                <div class="form-group mb-0 mt-2">
-                  <label for="cover-input"><i class="fas fa-camera"></i>
-                    <input type="file" class="form-control-file hide" id="cover-input" name="cover">
-                  </label>
-                </div>
-                <button type="button" class="btn btn-delete py-0 hide" id="delete-cover-btn">X</button>
-              </div>
-              {{!-- Edit Avatar --}}
-              <div class="avatar-wrapper" id="avatar-wrapper">
-                <img class="preset-avatar-large" id="current-avatar" src="https://i.imgur.com/iuHA5Qi.jpg">
-              </div>
-              <div class="form-group avatar-input-wrapper">
-                <label for="avatar-input"><i class="fas fa-camera on-avatar"></i>
-                  <input type="file" class="form-control-file hide" id="avatar-input" name="avatar">
-                </label>
-              </div>
-            </div>
-          </div>
-          {{!-- Edit-Name & Introduction --}}
-          <div class="form-group px-3" id="form-name-column">
-            <label for="name">名稱</label>
-            <input type="text" class="form-control" name="name" id="name" placeholder="Enter name"
-              value="" required>
-          </div>
-          <div class="form-group px-3" id="form-intro-column">
-            <label for="introduction">自我介紹</label>
-            <textarea class="form-control" id="introduction" name="introduction"
-              rows="3"></textarea>
-          </div>
-      </div>
-      </form>
-    </div>
-  </div>
-  </div>
+  
+  {{> editUserModal}}
 
   {{!-- tweetModal --}}
   <div class="modal fade" id="tweetModal" tabindex="-1" role="dialog" aria-labelledby="reply-tweet"

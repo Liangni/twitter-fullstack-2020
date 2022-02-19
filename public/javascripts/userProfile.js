@@ -5,7 +5,6 @@ userProfileControlPanel.addEventListener('click', function onPanelClicked(event)
     const coverInput = document.querySelector('#cover-input')
     const deleteCoverBtn = document.querySelector('#delete-cover-btn')
     const avatarInput = document.querySelector('#avatar-input')
-
     // 如曾開啟edit-user-modal並選擇cover檔案
     if (coverInput.files.length !== 0) {
       // 清空coverInput的檔案
