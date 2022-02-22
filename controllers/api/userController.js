@@ -1,6 +1,7 @@
 const db = require('../../models')
 const User = db.User
 const helpers = require('../../_helpers')
+const fileHelpers = require('../../helpers/file-helpers')
 
 const userController = {
   getUser: (req, res) => {
@@ -18,8 +19,8 @@ const userController = {
 
     if (files) {
       Promise.all([
-        helpers.getImgurLink(files.cover),
-        helpers.getImgurLink(files.avatar),
+        fileHelpers.getImgurLink(files.cover),
+        fileHelpers.getImgurLink(files.avatar),
         User.findByPk(req.params.userId)
       ])
         .then(([coverLink, avatarLink, user]) => {
