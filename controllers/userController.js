@@ -134,7 +134,6 @@ const userController = {
       .then(user => {
         return helpers.getPopularUsers(req)
           .then(popularUsers => {
-            isUser = helpers.isMatch(user.id, loginUser.id)
             const userTweets = user.Tweets.map(result => ({
               ...result.dataValues,
               isLiked: result.LikedUsers.map(item => item.id).includes(loginUser.id)
@@ -144,7 +143,6 @@ const userController = {
               user,
               userTweets,
               loginUser,
-              isUser,
               isFollowed,
               popularUsers
             })

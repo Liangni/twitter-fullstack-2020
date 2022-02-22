@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000
 // use helpers.ensureAuthenticated(req) to replace req.isAuthenticated()
 
 
-app.engine('hbs', handlebars({ defaultLayout: 'main', extname: '.hbs', helpers: require('./config/handlebars-helpers') }))
+app.engine('hbs', handlebars({ defaultLayout: 'main', extname: '.hbs', helpers: require('./helpers/handlebars-helpers') }))
 app.set('view engine', 'hbs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
