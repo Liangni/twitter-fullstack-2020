@@ -2,8 +2,8 @@ const editUserModal = document.querySelector('#editUserModal')
 
 editUserModal.addEventListener('change', function onFileChanged(event) {
   const fileInput = event.target
-
-  if (fileInput.files.length !== 0) {
+  
+  if (fileInput.files) {
     if (fileInput.matches('#cover-input')) {
       showCoverPreview(fileInput)
     }
