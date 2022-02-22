@@ -1,13 +1,13 @@
 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="edituserModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="/api/users/{{ user.id }}" method="POST" enctype="multipart/form-data">
+      <form id="user-form" name="user-form" data-user-id="{{ user.id }}" enctype="multipart/form-data">
         <div class="modal-header">
           <div class="d-flex">
             <button type="button" class="btn-dismiss close mr-3" data-dismiss="modal">X</button>
             <h5 class="modal-title" id="exampleModalLabel">編輯個人資料</h5>
           </div>
-          <button type="submit" class="btn">儲存</button>
+          <button type="submit" class="btn" id="save-user-info-btn">儲存</button>
         </div>
         <div class="modal-body px-0">
           <div class="image-wrapper">

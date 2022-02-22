@@ -20,6 +20,15 @@ editUserModal.addEventListener('click',
     }
   })
 
+editUserModal.addEventListener('submit',
+  function onUserFormSubmitted(event) {
+    const saveUserInfoBtn = document.querySelector('#save-user-info-btn')
+    event.preventDefault()
+    showBtnLoader(saveUserInfoBtn)
+    saveUserInfo(event.target.dataset.userId)
+  }
+)
+
 function showCoverPreview(coverInput) {
   const coverWrapper = document.querySelector('#cover-wrapper')
   const currentCover = document.querySelector('#current-cover')
@@ -73,4 +82,29 @@ function deleteCoverPreview() {
   coverWrapper.lastElementChild.remove()
   currentCover.classList.remove('hide')
   deleteCoverBtn.classList.add('hide')
+}
+
+function showBtnLoader(btn) {
+  btn.disabled = true
+  btn.innerHTML = 'Loading...'
+}
+
+function saveUserInfo(userId) {
+  const userForm = document.querySelector('#user-form')
+  const formData = new FormData(userForm)
+
+  axios
+    .post(`/api/users/${userId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then((response) => {
+      if (response.data.status === 'success') {
+        location.reload() 
+      }
+    })
+    .catch((err)=> {
+      console.log(err)
+    })
 }

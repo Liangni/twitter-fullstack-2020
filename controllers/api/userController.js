@@ -32,8 +32,6 @@ const userController = {
         })
         .then((user) => {
           return res.json({ status: 'success', message: '更新個人資料頁成功！' })
-          // req.flash('success_messages', '更新個人資料頁成功！')
-          // return res.redirect(`/users/${req.params.userId}/tweets`)
         })
     } else {
       return User.findByPk(req.params.userId)
@@ -45,8 +43,6 @@ const userController = {
         })
         .then((user) => {
           return res.json({ status: 'success', message: '更新個人資料頁成功！' })
-          // req.flash('success_messages', '更新個人資料頁成功！')
-          // return res.end()
         })
     }
   },
