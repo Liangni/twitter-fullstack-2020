@@ -12,14 +12,6 @@ function getUser(req) {
   return req.user;
 }
 
-function isMatch(a , b) {
-  if (a === b) { 
-    return true
-  } else {
-    return false
-    }
-  }
-
   function getPopularUsers(req) {
     return User.findAll({ 
       where: { role: 'normal' },
@@ -53,7 +45,6 @@ function getImgurLink(file) {
 module.exports = {
   ensureAuthenticated,
   getUser,
-  isMatch,
   getPopularUsers,
   getImgurLink
 };
