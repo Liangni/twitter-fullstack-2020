@@ -1,9 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { authenticated } = require('../middleware/auth')
-const multer = require('multer')
-const upload = multer({ dest: 'temp/' })
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'cover', maxCount: 1 }])
+const cpUpload = require('../middleware/multer')
 
 const userController = require('../controllers/api/userController.js')
 
