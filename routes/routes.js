@@ -1,32 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('../config/passport')
-const helpers = require('../_helpers')
+const { authenticated, authenticatedAdmin } = require('../middleware/auth')
 
 const userController = require('../controllers/userController')
 const adminController = require('../controllers/adminController')
 const tweetController = require('../controllers/tweetController')
 const replyController = require('../controllers/replyController')
 
-// AUTHENTICATION
-  const authenticated = (req, res, next) => {
-    if (helpers.ensureAuthenticated(req)) {
-      if (helpers.getUser(req).role === 'admin') {
-        return res.redirect('/admin/tweets')
-      }
-      return next()
-    }
-    res.redirect('/signin')
-  }
-  const authenticatedAdmin = (req, res, next) => {
-    if (helpers.ensureAuthenticated(req)) {
-      if (helpers.getUser(req).role === 'admin') {
-        return next()
-      }
-      return res.redirect('/')
-    }
-    res.redirect('/admin/signin')
-  }
 
 // ADMIN
 router.get('/admin/signin', adminController.signInPage)
