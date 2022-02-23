@@ -14,30 +14,27 @@ const userController = {
   signUpPage: (req, res) => {
     res.render('signup')
   },
-  signUp: (req, res) => {
+  signUp: (req, res, next) => {
     const { account, name, email, password, checkPassword } = req.body
-    const errors = []
-    User.findOne({
-      where: {
-        [Op.or]: [{ account }, { email }]
-      }
-    })
-      .then((user) => {
-        if (user) {
-          if (user.account === account) { errors.push({ message: 'account 已重覆註冊！' }) }
-          else { errors.push({ message: 'email 已重覆註冊！' }) }
-          res.render('signup', { errors, account, name, email, password, checkPassword })
-        } else {
-          req.flash('success_messages', '註冊成功!')
-          return User.create({
-            account,
-            name,
-            email,
-            password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null)
-          })
-            .then(user => { res.redirect('/signin') })
-        }
+    
+    if (password !== checkPassword) throw new Error('確認密碼與密碼不相符!')
+
+    User.findOne({ where: { [Op.or]: [{ account }, { email }] } })
+      .then(user => {
+        if (user && user.account === account) throw new Error('account 已重覆註冊！')
+        if (user && user.email === email) throw new Error('email 已重覆註冊！')
+        return User.create({
+          account,
+          name,
+          email,
+          password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null)
+        })
       })
+      .then(() => { 
+        req.flash('success_messages', '註冊成功!')
+        res.redirect('/signin') 
+      })
+      .catch(err => next(err))
   },
   signInPage: (req, res) => {
     return res.render('signin')
