@@ -49,40 +49,55 @@ const userController = {
     res.redirect('/signin')
   },
   // like tweet
-  addLike: (req, res) => {
-    return Like.create({
-      UserId: helpers.getUser(req).id,
-      TweetId: req.params.tweetId
-    })
-      .then(like => {
-        return Tweet.findByPk(like.TweetId).then(tweet => {
-          return tweet.increment('likeCounts')
-        }).then(tweet => {
-          return res.redirect('back')
-        })
+  addLike: (req, res, next) => {
+    const { tweetId } = req.params
+    return Promise.all([
+      Tweet.findByPk(tweetId),
+      Like.findOne({
+        where: {
+          UserId: helpers.getUser(req).id,
+          TweetId: tweetId
+        }
       })
+    ])
+      .then(([tweet, like]) => {
+        if (!tweet) throw new Error('喜歡的貼文不存在或已被刪除!')
+        if (like) throw new Error('你已對這則貼文按過喜歡!')
+
+        return Promise.all([
+          tweet.increment('likeCounts'),
+          Like.create({
+            UserId: helpers.getUser(req).id,
+            TweetId: tweetId
+          })
+        ])
+      })
+      .then(() => res.redirect('back'))
+      .catch(err => next(err))
   },
   // unlike tweet
-  removeLike: (req, res) => {
-    return Tweet.findByPk(req.params.tweetId, {
-      include: [
-        Like
-      ]
-    })
-      .then(tweet => {
-        return tweet.decrement('likeCounts')
+  removeLike: (req, res, next) => {
+    return Promise.all([
+      Tweet.findByPk(req.params.tweetId),
+      Like.findOne({
+        where: {
+          UserId: helpers.getUser(req).id,
+          TweetId: req.params.tweetId
+        }
       })
-      .then(like => {
-        return Like.destroy({
-          where: {
-            UserId: helpers.getUser(req).id,
-            TweetId: req.params.tweetId
-          }
-        })
+    ])
+      .then(([tweet, like]) => {
+        if (!like) throw new Error('你沒有對這則貼文按過喜歡!')
+
+        return Promise.all([
+          like.destroy(),
+          tweet.decrement('likeCounts')
+        ])
       })
       .then(() => {
         return res.redirect('back')
       })
+      .catch(err => next(err))
   },
   // following
   addFollowing: (req, res) => {
