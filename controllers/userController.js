@@ -151,33 +151,37 @@ const userController = {
       .catch(err => next(err))
   },
   //使用者個人資料頁面
-  getUserTweets: (req, res) => {
+  getUserTweets: (req, res, next) => {
     const loginUser = helpers.getUser(req)
-    return User.findByPk(req.params.userId, {
-      include: [
-        { model: Tweet, include: [{ model: User, as: 'LikedUsers' }] },
-        { model: User, as: 'Followers' },
-        { model: User, as: 'Followings' },
-      ],
-      order: [[Tweet, 'createdAt', 'DESC']]
-    })
-      .then(user => {
-        return helpers.getPopularUsers(req)
-          .then(popularUsers => {
-            const userTweets = user.Tweets.map(result => ({
-              ...result.dataValues,
-              isLiked: result.LikedUsers.map(item => item.id).includes(loginUser.id)
-            }))
-            isFollowed = helpers.getUser(req).Followings.map(f => f.id).includes(user.id)
-            return res.render('userTweets', {
-              user,
-              userTweets,
-              loginUser,
-              isFollowed,
-              popularUsers
-            })
-          })
+    return Promise.all([
+      User.findByPk(req.params.userId, {
+        include: [
+          { model: Tweet, include: [{ model: User, as: 'LikedUsers' }] },
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' },
+        ],
+        order: [[Tweet, 'createdAt', 'DESC']]
+      }),
+      helpers.getPopularUsers(req)
+    ])
+      .then(([user, popularUsers]) => {  
+        if (!user) throw new Error('使用者不存在!')
+
+        const isFollowed = loginUser.Followings ? loginUser.Followings.map(f => f.id).includes(user.id) : false
+        const likedTweetIds = loginUser.LikedTweets? loginUser.LikedTweets.map(t => t.id) : []
+        const userTweets = user.Tweets.map(result => ({
+          ...result.dataValues,
+          isLiked: likedTweetIds.includes(result.id)
+        }))
+        return res.render('userTweets', {
+          loginUser,
+          user: user.toJSON(),
+          isFollowed,
+          userTweets,
+          popularUsers
+        })  
       })
+      .catch(err => next(err))
   },
   //設定使用者個人資料頁面推文與回覆頁面
   getUserReplies: (req, res) => {
