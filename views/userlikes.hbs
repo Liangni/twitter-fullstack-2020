@@ -79,7 +79,7 @@
         <div class="icon-outline pt-1">
           <a href="{{ user.email }}"><i class="far fa-envelope"></i></a>
         </div>
-        {{#if user.isFollowed}}
+        {{#if isFollowed}}
         <form action="/followships/{{user.id}}?_method=DELETE" method="POST">
           <button type="submit" class="btn followings-button mr-3">正在跟隨</button>
         </form>
@@ -129,8 +129,8 @@
         </li>
       </ul>
       <div class="user-tweet">
-        {{#if user.LikedTweets}}
-        {{#each user.LikedTweets}}
+        {{#if userLikedTweets }}
+        {{#each userLikedTweets}}
         <div class="tweet col-md-12">
           <div class="d-flex">
             <div class="mt-2 mr-2 col-md-2" style="padding: 0%;"><a href="/users/{{this.User.id}}/tweets"
@@ -156,7 +156,7 @@
                   <i class="far fa-comment mr-2"></i>
                   {{ this.replyCounts }}
                 </div>
-                {{#if this.isLikedByLoginUser}}
+                {{#if this.isLiked}}
                 <form action='/tweets/{{this.id}}/unlike' method="POST">
                   <button class="push-button like-icon ml-4" type="submit">
                     <i class="fas fa-heart"></i>

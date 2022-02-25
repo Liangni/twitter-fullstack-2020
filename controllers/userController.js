@@ -209,6 +209,39 @@ const userController = {
       })
       .catch(err => next(err))
   },
+  getUserLikes: (req, res, next) => {
+    const loginUser = helpers.getUser(req)
+    return Promise.all([
+      User.findByPk(req.params.userId, {
+        include: [
+          Tweet,
+          Like,
+          { model: Tweet, as: 'LikedTweets', include: [User] },
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' }
+        ],
+        order: [[Like, 'createdAt', 'DESC']],
+      }),
+      helpers.getPopularUsers(req)
+    ])
+      .then(([user, popularUsers]) => {
+        if (!user) throw new Error('使用者不存在!')
+
+        const isFollowed = loginUser.Followings ? loginUser.Followings.map(f => f.id).includes(user.id) : false
+        const likedTweetIds = loginUser.LikedTweets ? loginUser.LikedTweets.map(t => t.id) : []
+        const userLikedTweets = user.LikedTweets.map(tweet => ({
+          ...tweet.dataValues,
+          isLiked: likedTweetIds.includes(tweet.id)
+        }))
+        return res.render('userLikes', { 
+          loginUser,
+          user: user.toJSON(),
+          isFollowed,
+          userLikedTweets,
+          popularUsers 
+        })
+      })
+      .catch(err => next(err))
   },
   // 瀏覽 user 的 followings
   getUserFollowing: (req, res) => {
@@ -269,31 +302,6 @@ const userController = {
               loginUser: helpers.getUser(req)
             })
           })
-      })
-  },
-  //使用者喜歡的內容頁面
-  getUserLikes: (req, res) => {
-    const loginUser = helpers.getUser(req)
-    return Promise.all([
-      User.findByPk(req.params.userId, {
-        include: [
-          Tweet,
-          { model: Tweet, as: 'LikedTweets', include: [User] },
-          Like,
-          { model: User, as: 'Followers' },
-          { model: User, as: 'Followings' }
-        ],
-        order: [[Like, 'createdAt', 'DESC']],
-      }),
-      helpers.getPopularUsers(req)
-    ])
-      .then(([user, popularUsers]) => {
-        user.LikedTweets = user.LikedTweets.map(tweet => ({
-          ...tweet.dataValues,
-          isLikedByLoginUser: loginUser.LikedTweets ? (loginUser.LikedTweets.map(tweetLgnUsr => tweetLgnUsr.id).includes(tweet.id)) : false
-        }))
-        user.isFollowed = loginUser.Followings.map(userFlldByLgnUsr => userFlldByLgnUsr.id).includes(user.id)
-        return res.render('userlikes', { loginUser, user, popularUsers })
       })
   },
   // 瀏覽帳號設定頁面
