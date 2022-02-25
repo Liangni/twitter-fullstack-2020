@@ -100,37 +100,55 @@ const userController = {
       .catch(err => next(err))
   },
   // following
-  addFollowing: (req, res) => {
-    // 目前的登入者不行追蹤自己
-    if (helpers.getUser(req).id === Number(req.body.id)) {
-      return res.render('followSelf')
-    }
-    return Followship.create({
-      // 目前登入的使用者id
-      followerId: helpers.getUser(req).id,
-      // 我要追蹤的使用者id
-      followingId: req.body.id
-    })
-      .then((followship) => {
+  addFollowing: (req, res, next) => {
+    const loginUser = helpers.getUser(req)
+    const popularUserId = Number(req.body.id)
+    // 登入使用者不行追蹤自己
+    if (loginUser.id === popularUserId) { return res.render('followSelf') }
+    
+    return Promise.all([
+      User.findByPk(popularUserId),
+      Followship.findOne({
+        where: {
+          followerId: loginUser.id,
+          followingId: popularUserId
+        }
+      })
+    ])
+      .then(([user, followship]) => {
+        if (!user) throw new Error('跟隨的使用者不存在!')
+        if (followship) throw new Error('你已經跟隨過該使用者!')
+
+        return Followship.create({
+          followerId: loginUser.id,
+          followingId: popularUserId
+        })
+      })
+      .then(() => {
         req.flash('success_messages', '跟隨成功')
         return res.redirect('back')
       })
+      .catch(err => next(err))
   },
   // removeFollowing
-  removeFollowing: (req, res) => {
+  removeFollowing: (req, res, next) => {
+    const followingId = req.params.followingId
+    
     return Followship.findOne({
       where: {
         followerId: helpers.getUser(req).id,
-        followingId: req.params.followingId
+        followingId: followingId
       }
     })
       .then(followship => {
-        followship.destroy()
-          .then(followship => {
-            req.flash('error_messages', '取消跟隨')
-            return res.redirect('back')
-          })
+        if (!followship) throw new Error('你沒有跟隨這名使用者!')
+        return followship.destroy()
       })
+      .then(() => {
+        req.flash('success_messages', '取消跟隨')
+        return res.redirect('back')
+      })
+      .catch(err => next(err))
   },
   //使用者個人資料頁面
   getUserTweets: (req, res) => {
