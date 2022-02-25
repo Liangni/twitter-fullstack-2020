@@ -78,7 +78,7 @@
         <div class="icon-outline pt-1">
           <a href="{{ user.email }}"><i class="far fa-envelope"></i></a>
         </div>
-        {{#if user.isFollowed}}
+        {{#if isFollowed}}
         <form action="/followships/{{user.id}}?_method=DELETE" method="POST">
           <button type="submit" class="btn followings-button mr-3">正在跟隨</button>
         </form>

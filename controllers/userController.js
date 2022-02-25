@@ -183,10 +183,8 @@ const userController = {
       })
       .catch(err => next(err))
   },
-  //設定使用者個人資料頁面推文與回覆頁面
-  getUserReplies: (req, res) => {
+  getUserReplies: (req, res, next) => {
     const loginUser = helpers.getUser(req)
-
     return Promise.all([
       User.findByPk(req.params.userId, {
         include: [
@@ -199,15 +197,18 @@ const userController = {
       helpers.getPopularUsers(req)
     ])
       .then(([user, popularUsers]) => {
-        user = user.toJSON()
-        user.isFollowed = loginUser.Followings.map(userFlldByLgnUsr => userFlldByLgnUsr.id).includes(user.id)
-        console.log(user)
+        if (!user) throw new Error('使用者不存在!')
+
+        const isFollowed = loginUser.Followings ? loginUser.Followings.map(f => f.id).includes(user.id) : false
         return res.render('userReplies', {
-          user,
           loginUser,
+          user: user.toJSON(),
+          isFollowed,
           popularUsers
         })
       })
+      .catch(err => next(err))
+  },
   },
   // 瀏覽 user 的 followings
   getUserFollowing: (req, res) => {
