@@ -303,14 +303,13 @@ const userController = {
     .catch(err => next(err))  
   },
   // 瀏覽帳號設定頁面
-  editSetting: (req, res) => {
-    if (helpers.getUser(req).id !== Number(req.params.userId)) {
-      req.flash('error_messages', '你沒有檢視此頁面的權限')
-      return res.redirect(`/users/${helpers.getUser(req).id}/setting/edit`)
-    }
-    return User.findByPk(req.params.userId).then((user) => {
-      return res.render('setting', { user: user.toJSON() })
-    })
+  settingPage: (req, res, next) => {
+    const userId = Number(req.params.userId)
+    if (helpers.getUser(req).id !== userId ) throw new Error('你沒有檢視此頁面的權限')
+      
+    return User.findByPk(userId)
+      .then(user => res.render('setting', { user: user.toJSON() }))
+      .catch(err => next(err))
   },
   // 更新帳號設定
   putSetting: (req, res) => {

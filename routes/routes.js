@@ -49,7 +49,7 @@ router.post('/followships', authenticated, userController.addFollowing)
 router.delete('/followships/:followingId', authenticated, userController.removeFollowing)
   
 // SETTEING
-router.get('/users/:userId/setting/edit', authenticated, userController.editSetting)
+router.get('/users/:userId/setting/edit', authenticated, userController.settingPage)
 router.put('/users/:userId/setting', authenticated, userController.putSetting)
 
 router.use('/', generalErrorHandler )
