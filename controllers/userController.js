@@ -244,34 +244,34 @@ const userController = {
       .catch(err => next(err))
   },
   // 瀏覽 user 的 followings
-  getUserFollowing: (req, res) => {
-    return User.findByPk(req.params.userId, {
-      include: [
-        Tweet,
-        { model: User, as: 'Followings' }
-      ]
-    })
-      .then(users => {
-        return helpers.getPopularUsers(req)
-          .then(popularUsers => {
-            users.Followings = users.Followings.map(user => ({
-              ...user.dataValues,
-              userName: user.name,
-              userId: user.id,
-              userAccount: user.account,
-              userAvatar: user.avatar,
-              userIntroduction: user.introduction,
-              isFollowed: helpers.getUser(req).Followings.map(f => f.id).includes(user.id)
-            }))
-            users.Followings = users.Followings.sort((a, b) => b.Followship.createdAt - a.Followship.createdAt)
-            return res.render('userFollowings', {
-              nowUser: users,
-              users: users.Followings,
-              popularUsers,
-              loginUser: helpers.getUser(req)
-            })
-          })
+  getUserFollowing: (req, res, next) => {
+    const loginUser = helpers.getUser(req)
+    return Promise.all([
+      User.findByPk(req.params.userId, {
+        include: [
+          Tweet,
+          { model: User, as: 'Followings' }
+        ]
+      }),
+      helpers.getPopularUsers(req)
+    ])
+      .then(([user, popularUsers]) => {
+        if (!user) throw new Error('使用者不存在!')
+
+        const followingIds = loginUser.Followings ? loginUser.Followings.map(f => f.id) : []
+        const followings = user.Followings.map(u => ({
+          ...u.dataValues,
+          isFollowed: followingIds.includes(u.id)
+        })).sort((a, b) => b.Followship.createdAt - a.Followship.createdAt)
+            
+        return res.render('userFollowings', {
+          loginUser,
+          user: user.toJSON(),
+          followings,
+          popularUsers,
+        })
       })
+      .catch(err => next(err))
   },
   // 瀏覽 user 的 followers
   getUserFollower: (req, res) => {
