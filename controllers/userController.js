@@ -312,48 +312,45 @@ const userController = {
       .catch(err => next(err))
   },
   // 更新帳號設定
-  putSetting: (req, res) => {
+  putSetting: (req, res, next) => {
     const { account, name, email, password, passwordCheck } = req.body
+    const userId = Number(req.params.userId)
+    const loginUser = helpers.getUser(req)
 
     // 檢查使用者是否有編輯權限
-    if (helpers.getUser(req).id !== Number(req.params.userId)) {
-      req.flash('error_messages', '你沒有檢視此頁面的權限')
-      return res.redirect(`/users/${helpers.getUser(req).id}/setting/edit`)
-    }
+    if (loginUser.id !== userId) throw new Error('你沒有變更權限')
 
     // 如使用者有輸入密碼或確認密碼，檢查是否一致
-    if (password.trim() || passwordCheck.trim()) {
-      if (password !== passwordCheck) {
-        req.flash('error_messages', '密碼與確認密碼不一致！')
-        return res.redirect('back')
-      }
-    }
+    const isNotEmptyStr = password.trim() || passwordCheck.trim()
+    if (isNotEmptyStr && password !== passwordCheck) throw new Error('密碼與確認密碼不一致！')
+
     // 檢查是否有其他使用者重複使用表單的帳號或Email
     return User.findOne({
       where: {
-        id: { [Op.ne]: helpers.getUser(req).id },
+        id: { [Op.ne]: loginUser.id },
         [Op.or]: [{ account }, { email }]
       }
-    }).then((user) => {
-      if (user) {　// 如其他使用者存在，區分是重複帳號還是Email
-        if (user.account === account) { req.flash('error_messages', 'account 已重覆註冊！') }
-        else { req.flash('error_messages', 'email 已重覆註冊！') }
-        return res.redirect('back')
-      } else {
-        return User.findByPk(req.params.userId).then((user) => {
-          return user.update({
-            account,
-            name,
-            email,
-            password: password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10), null) : user.password
-          })
-            .then(user => {
-              req.flash('success_messages', '帳號資料更新成功!')
-              return res.redirect(`/users/${req.params.userId}/setting/edit`)
-            })
-        })
-      }
     })
+      .then((otherUser) => {
+        // 如其他使用者存在，區分是重複帳號還是Email
+        if (otherUser && otherUser.account === account) throw new Error('account 已重覆註冊！')
+        if (otherUser && otherUser.email === email) throw new Error('email 已重覆註冊！')
+
+        return User.findByPk(userId)
+      })
+      .then((user) => {
+        return user.update({
+          account,
+          name,
+          email,
+          password: password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10), null) : user.password
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', '帳號資料更新成功!')
+        return res.redirect('back')
+      })
+      .catch(err => next(err))
   }
 
 }
