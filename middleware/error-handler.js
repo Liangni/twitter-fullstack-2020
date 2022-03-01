@@ -5,7 +5,9 @@ module.exports = {
     } else {
       req.flash('error_messages', `${err}`)
     }
-    res.redirect('back')
+
+    const url = req.headers.referer? 'back' : '/tweets'
+    res.redirect(url)
     next(err)
   }
 }
