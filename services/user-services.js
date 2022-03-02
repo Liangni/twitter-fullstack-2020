@@ -183,6 +183,40 @@ const userServices = {
       })
       .catch(err => cb(err))
   },
+  getUserLikes: (req, cb) => {
+    const loginUser = helpers.getUser(req)
+    return Promise.all([
+      User.findByPk(req.params.userId, {
+        include: [
+          Tweet,
+          Like,
+          { model: Tweet, as: 'LikedTweets', include: [User] },
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' }
+        ],
+        order: [[Like, 'createdAt', 'DESC']],
+      }),
+      helpers.getPopularUsers(req)
+    ])
+      .then(([user, popularUsers]) => {
+        if (!user) throw new Error('使用者不存在!')
+
+        const isFollowed = loginUser.Followings ? loginUser.Followings.map(f => f.id).includes(user.id) : false
+        const likedTweetIds = loginUser.LikedTweets ? loginUser.LikedTweets.map(t => t.id) : []
+        const userLikedTweets = user.LikedTweets.map(tweet => ({
+          ...tweet.dataValues,
+          isLiked: likedTweetIds.includes(tweet.id)
+        }))
+        return cb(null, {
+          loginUser,
+          user: user.toJSON(),
+          isFollowed,
+          userLikedTweets,
+          popularUsers
+        })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices

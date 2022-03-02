@@ -58,44 +58,13 @@ const userController = {
   },
   //使用者個人資料頁面
   getUserTweets: (req, res, next) => {
-    userServices.getUserTweets(req, (err, data) => { err? next(err) : res.render('userTweets', data ) })
+    userServices.getUserTweets(req, (err, data) => { err? next(err) : res.render('userTweets', data) })
   },
   getUserReplies: (req, res, next) => {
-    userServices.getUserReplies(req, (err, data) => { err ? next(err) : res.render('userReplies', data ) })
+    userServices.getUserReplies(req, (err, data) => { err ? next(err) : res.render('userReplies', data) })
   },
   getUserLikes: (req, res, next) => {
-    const loginUser = helpers.getUser(req)
-    return Promise.all([
-      User.findByPk(req.params.userId, {
-        include: [
-          Tweet,
-          Like,
-          { model: Tweet, as: 'LikedTweets', include: [User] },
-          { model: User, as: 'Followers' },
-          { model: User, as: 'Followings' }
-        ],
-        order: [[Like, 'createdAt', 'DESC']],
-      }),
-      helpers.getPopularUsers(req)
-    ])
-      .then(([user, popularUsers]) => {
-        if (!user) throw new Error('使用者不存在!')
-
-        const isFollowed = loginUser.Followings ? loginUser.Followings.map(f => f.id).includes(user.id) : false
-        const likedTweetIds = loginUser.LikedTweets ? loginUser.LikedTweets.map(t => t.id) : []
-        const userLikedTweets = user.LikedTweets.map(tweet => ({
-          ...tweet.dataValues,
-          isLiked: likedTweetIds.includes(tweet.id)
-        }))
-        return res.render('userLikes', { 
-          loginUser,
-          user: user.toJSON(),
-          isFollowed,
-          userLikedTweets,
-          popularUsers 
-        })
-      })
-      .catch(err => next(err))
+    userServices.getUserLikes(req, (err, data) => { err? next(err) : res.render('userLikes', data) })
   },
   // 瀏覽 user 的 followings
   getUserFollowing: (req, res, next) => {
