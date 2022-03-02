@@ -58,36 +58,7 @@ const userController = {
   },
   //使用者個人資料頁面
   getUserTweets: (req, res, next) => {
-    const loginUser = helpers.getUser(req)
-    return Promise.all([
-      User.findByPk(req.params.userId, {
-        include: [
-          { model: Tweet, include: [{ model: User, as: 'LikedUsers' }] },
-          { model: User, as: 'Followers' },
-          { model: User, as: 'Followings' },
-        ],
-        order: [[Tweet, 'createdAt', 'DESC']]
-      }),
-      helpers.getPopularUsers(req)
-    ])
-      .then(([user, popularUsers]) => {  
-        if (!user) throw new Error('使用者不存在!')
-
-        const isFollowed = loginUser.Followings ? loginUser.Followings.map(f => f.id).includes(user.id) : false
-        const likedTweetIds = loginUser.LikedTweets? loginUser.LikedTweets.map(t => t.id) : []
-        const userTweets = user.Tweets.map(result => ({
-          ...result.dataValues,
-          isLiked: likedTweetIds.includes(result.id)
-        }))
-        return res.render('userTweets', {
-          loginUser,
-          user: user.toJSON(),
-          isFollowed,
-          userTweets,
-          popularUsers
-        })  
-      })
-      .catch(err => next(err))
+    userServices.getUserTweets(req, (err, data) => { err? next(err) : res.render('userTweets', data ) })
   },
   getUserReplies: (req, res, next) => {
     const loginUser = helpers.getUser(req)
