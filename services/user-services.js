@@ -246,6 +246,34 @@ const userServices = {
       })
       .catch(err => cb(err))
   },
+  getUserFollower: (req, cb) => {
+    const loginUser = helpers.getUser(req)
+    return Promise.all([
+      User.findByPk(req.params.userId, {
+        include: [
+          Tweet,
+          { model: User, as: 'Followers' }
+        ]
+      }),
+      helpers.getPopularUsers(req)
+    ])
+      .then(([user, popularUsers]) => {
+        if (!user) throw new Error('使用者不存在!')
+
+        const followingIds = loginUser.Followings ? loginUser.Followings.map(f => f.id) : []
+        const followers = user.Followers.map(user => ({
+          ...user.dataValues,
+          isFollowed: followingIds.includes(user.id)
+        })).sort((a, b) => b.Followship.createdAt - a.Followship.createdAt)
+        return cb(null, {
+          loginUser,
+          user: user.toJSON(),
+          followers,
+          popularUsers,
+        })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices
