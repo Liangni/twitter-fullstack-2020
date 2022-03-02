@@ -68,33 +68,9 @@ const userController = {
   },
   // 瀏覽 user 的 followings
   getUserFollowing: (req, res, next) => {
-    const loginUser = helpers.getUser(req)
-    return Promise.all([
-      User.findByPk(req.params.userId, {
-        include: [
-          Tweet,
-          { model: User, as: 'Followings' }
-        ]
-      }),
-      helpers.getPopularUsers(req)
-    ])
-      .then(([user, popularUsers]) => {
-        if (!user) throw new Error('使用者不存在!')
-
-        const followingIds = loginUser.Followings ? loginUser.Followings.map(f => f.id) : []
-        const followings = user.Followings.map(u => ({
-          ...u.dataValues,
-          isFollowed: followingIds.includes(u.id)
-        })).sort((a, b) => b.Followship.createdAt - a.Followship.createdAt)
-            
-        return res.render('userFollowings', {
-          loginUser,
-          user: user.toJSON(),
-          followings,
-          popularUsers,
-        })
-      })
-      .catch(err => next(err))
+    userServices.getUserFollowing(req, (err, data) => { 
+      err ? next(err) : res.render('userFollowings', data)
+    })
   },
   // 瀏覽 user 的 followers
   getUserFollower: (req, res, next) => {
