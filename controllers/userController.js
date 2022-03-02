@@ -7,7 +7,7 @@ const Reply = db.Reply
 const Like = db.Like
 const Followship = db.Followship
 const helpers = require('../_helpers')
-
+const userServices = require('../services/user-services')
 
 
 const userController = {
@@ -15,26 +15,11 @@ const userController = {
     res.render('signup')
   },
   signUp: (req, res, next) => {
-    const { account, name, email, password, checkPassword } = req.body
-    
-    if (password !== checkPassword) throw new Error('確認密碼與密碼不相符!')
-
-    User.findOne({ where: { [Op.or]: [{ account }, { email }] } })
-      .then(user => {
-        if (user && user.account === account) throw new Error('account 已重覆註冊！')
-        if (user && user.email === email) throw new Error('email 已重覆註冊！')
-        return User.create({
-          account,
-          name,
-          email,
-          password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null)
-        })
-      })
-      .then(() => { 
-        req.flash('success_messages', '註冊成功!')
-        res.redirect('/signin') 
-      })
-      .catch(err => next(err))
+    userServices.signUp(req, (err, data) => { 
+      err ? next(err) : 
+      req.flash('success_messages', '註冊成功!')
+      res.redirect('/signin')
+    })
   },
   signInPage: (req, res) => {
     return res.render('signin')
@@ -50,30 +35,7 @@ const userController = {
   },
   // like tweet
   addLike: (req, res, next) => {
-    const { tweetId } = req.params
-    return Promise.all([
-      Tweet.findByPk(tweetId),
-      Like.findOne({
-        where: {
-          UserId: helpers.getUser(req).id,
-          TweetId: tweetId
-        }
-      })
-    ])
-      .then(([tweet, like]) => {
-        if (!tweet) throw new Error('喜歡的貼文不存在或已被刪除!')
-        if (like) throw new Error('你已對這則貼文按過喜歡!')
-
-        return Promise.all([
-          tweet.increment('likeCounts'),
-          Like.create({
-            UserId: helpers.getUser(req).id,
-            TweetId: tweetId
-          })
-        ])
-      })
-      .then(() => res.redirect('back'))
-      .catch(err => next(err))
+    userServices.addLike(req, (err, data) => { err ? next(err) : res.redirect('back') })
   },
   // unlike tweet
   removeLike: (req, res, next) => {
