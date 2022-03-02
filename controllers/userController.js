@@ -39,27 +39,7 @@ const userController = {
   },
   // unlike tweet
   removeLike: (req, res, next) => {
-    return Promise.all([
-      Tweet.findByPk(req.params.tweetId),
-      Like.findOne({
-        where: {
-          UserId: helpers.getUser(req).id,
-          TweetId: req.params.tweetId
-        }
-      })
-    ])
-      .then(([tweet, like]) => {
-        if (!like) throw new Error('你沒有對這則貼文按過喜歡!')
-
-        return Promise.all([
-          like.destroy(),
-          tweet.decrement('likeCounts')
-        ])
-      })
-      .then(() => {
-        return res.redirect('back')
-      })
-      .catch(err => next(err))
+    userServices.removeLike(req, (err, data) => { err ? next(err) : res.redirect('back') })
   },
   // following
   addFollowing: (req, res, next) => {

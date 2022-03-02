@@ -54,7 +54,30 @@ const userServices = {
         return cb(null, { tweet, like })
       })
       .catch(err => cb(err))
-    }
+  },
+  removeLike: (req, cb) => {
+    return Promise.all([
+      Tweet.findByPk(req.params.tweetId),
+      Like.findOne({
+        where: {
+          UserId: helpers.getUser(req).id,
+          TweetId: req.params.tweetId
+        }
+      })
+    ])
+      .then(([tweet, like]) => {
+        if (!like) throw new Error('你沒有對這則貼文按過喜歡!')
+
+        return Promise.all([
+          tweet.decrement('likeCounts'),
+          like.destroy()
+        ])
+      })
+      .then(([tweet, like]) => {
+        return cb(null, { tweet, like })
+      })
+      .catch(err => cb(err))
+  }
 }
 
 module.exports = userServices
