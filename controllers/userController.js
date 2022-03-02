@@ -80,12 +80,7 @@ const userController = {
   },
   // 瀏覽帳號設定頁面
   settingPage: (req, res, next) => {
-    const userId = Number(req.params.userId)
-    if (helpers.getUser(req).id !== userId ) throw new Error('你沒有檢視此頁面的權限')
-      
-    return User.findByPk(userId)
-      .then(user => res.render('setting', { user: user.toJSON() }))
-      .catch(err => next(err))
+    userServices.settingPage(req, (err, data) => { err? next(err) :  res.render('setting', data)})
   },
   // 更新帳號設定
   putSetting: (req, res, next) => {

@@ -274,6 +274,14 @@ const userServices = {
       })
       .catch(err => cb(err))
   },
+  settingPage: (req, cb) => {
+    const userId = Number(req.params.userId)
+    if (helpers.getUser(req).id !== userId) throw new Error('你沒有檢視此頁面的權限')
+
+    return User.findByPk(userId)
+      .then(user => cb(null, { user: user.toJSON() }))
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices
