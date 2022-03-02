@@ -61,30 +61,7 @@ const userController = {
     userServices.getUserTweets(req, (err, data) => { err? next(err) : res.render('userTweets', data ) })
   },
   getUserReplies: (req, res, next) => {
-    const loginUser = helpers.getUser(req)
-    return Promise.all([
-      User.findByPk(req.params.userId, {
-        include: [
-          Tweet,
-          { model: Reply, include: [{ model: Tweet, include: [User] }] } ,
-          { model: User, as: 'Followers' },
-          { model: User, as: 'Followings' }
-        ]
-      }),
-      helpers.getPopularUsers(req)
-    ])
-      .then(([user, popularUsers]) => {
-        if (!user) throw new Error('使用者不存在!')
-
-        const isFollowed = loginUser.Followings ? loginUser.Followings.map(f => f.id).includes(user.id) : false
-        return res.render('userReplies', {
-          loginUser,
-          user: user.toJSON(),
-          isFollowed,
-          popularUsers
-        })
-      })
-      .catch(err => next(err))
+    userServices.getUserReplies(req, (err, data) => { err ? next(err) : res.render('userReplies', data ) })
   },
   getUserLikes: (req, res, next) => {
     const loginUser = helpers.getUser(req)
