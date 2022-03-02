@@ -1,6 +1,6 @@
 const { Op } = require('sequelize')
 const bcrypt = require('bcryptjs')
-const { User, Tweet, Like } = require('../models')
+const { User, Tweet, Like, Followship } = require('../models')
 const helpers = require('../_helpers')
 
 const userServices = {
@@ -77,7 +77,36 @@ const userServices = {
         return cb(null, { tweet, like })
       })
       .catch(err => cb(err))
-  }
+  },
+  addFollowing: (req, res, cb) => {
+    const loginUser = helpers.getUser(req)
+    const popularUserId = Number(req.body.id)
+    // 登入使用者不行追蹤自己
+    if (loginUser.id === popularUserId) { return res.render('followSelf') }
+
+    return Promise.all([
+      User.findByPk(popularUserId),
+      Followship.findOne({
+        where: {
+          followerId: loginUser.id,
+          followingId: popularUserId
+        }
+      })
+    ])
+      .then(([user, followship]) => {
+        if (!user) throw new Error('跟隨的使用者不存在!')
+        if (followship) throw new Error('你已經跟隨過該使用者!')
+
+        return Followship.create({
+          followerId: loginUser.id,
+          followingId: popularUserId
+        })
+      })
+      .then((followship) => {
+        return cb(null, { followship })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices

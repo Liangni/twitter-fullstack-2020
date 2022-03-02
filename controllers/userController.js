@@ -43,34 +43,10 @@ const userController = {
   },
   // following
   addFollowing: (req, res, next) => {
-    const loginUser = helpers.getUser(req)
-    const popularUserId = Number(req.body.id)
-    // 登入使用者不行追蹤自己
-    if (loginUser.id === popularUserId) { return res.render('followSelf') }
-    
-    return Promise.all([
-      User.findByPk(popularUserId),
-      Followship.findOne({
-        where: {
-          followerId: loginUser.id,
-          followingId: popularUserId
-        }
-      })
-    ])
-      .then(([user, followship]) => {
-        if (!user) throw new Error('跟隨的使用者不存在!')
-        if (followship) throw new Error('你已經跟隨過該使用者!')
-
-        return Followship.create({
-          followerId: loginUser.id,
-          followingId: popularUserId
-        })
-      })
-      .then(() => {
-        req.flash('success_messages', '跟隨成功')
-        return res.redirect('back')
-      })
-      .catch(err => next(err))
+    userServices.addFollowing(req, res, (err, data) => { 
+      err ? next(err) : 
+      req.flash('success_messages', '跟隨成功')
+      res.redirect('back')})
   },
   // removeFollowing
   removeFollowing: (req, res, next) => {
