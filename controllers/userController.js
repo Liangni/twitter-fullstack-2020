@@ -50,23 +50,11 @@ const userController = {
   },
   // removeFollowing
   removeFollowing: (req, res, next) => {
-    const followingId = req.params.followingId
-    
-    return Followship.findOne({
-      where: {
-        followerId: helpers.getUser(req).id,
-        followingId: followingId
-      }
+    userServices.removeFollowing(req, (err, data) => {
+      err ? next(err) :
+      req.flash('success_messages', '取消跟隨')
+      res.redirect('back')
     })
-      .then(followship => {
-        if (!followship) throw new Error('你沒有跟隨這名使用者!')
-        return followship.destroy()
-      })
-      .then(() => {
-        req.flash('success_messages', '取消跟隨')
-        return res.redirect('back')
-      })
-      .catch(err => next(err))
   },
   //使用者個人資料頁面
   getUserTweets: (req, res, next) => {

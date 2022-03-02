@@ -107,6 +107,24 @@ const userServices = {
       })
       .catch(err => cb(err))
   },
+  removeFollowing: (req, cb) => {
+    const followingId = req.params.followingId
+
+    return Followship.findOne({
+      where: {
+        followerId: helpers.getUser(req).id,
+        followingId: followingId
+      }
+    })
+      .then(followship => {
+        if (!followship) throw new Error('你沒有跟隨這名使用者!')
+        return followship.destroy()
+      })
+      .then((followship) => {
+        return cb(null, { followship })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices
