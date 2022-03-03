@@ -4,6 +4,7 @@ const User = db.User
 const Reply = db.Reply
 const Like = db.Like
 const helpers = require('../_helpers')
+const sharedServices = require('../services/shared-services')
 
 const tweetController = {
 
@@ -18,7 +19,7 @@ const tweetController = {
     })
       .then(tweets => {
         // 撈 popular view 的資料
-        return helpers.getPopularUsers(req)
+        return sharedServices.getPopularUsers(req)
           .then(popularUsers => {
             tweets = tweets.map(tweet => {
               if (tweet.dataValues !== undefined) {
@@ -53,7 +54,7 @@ const tweetController = {
           { model: User, as: 'LikedUsers' }
         ]
       }),
-      helpers.getPopularUsers(req)
+      sharedServices.getPopularUsers(req)
     ]).then(([tweet, popularUsers]) => {
       tweet.dataValues.isLiked = tweet.LikedUsers.map(u => u.id).includes(helpers.getUser(req).id)
       return res.render('tweet', {

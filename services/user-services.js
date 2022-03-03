@@ -2,6 +2,7 @@ const { Op } = require('sequelize')
 const bcrypt = require('bcryptjs')
 const { User, Tweet, Like, Followship, Reply } = require('../models')
 const helpers = require('../_helpers')
+const sharedServices = require('./shared-services')
 
 const userServices = {
   signUp: (req, cb) => {
@@ -136,7 +137,7 @@ const userServices = {
         ],
         order: [[Tweet, 'createdAt', 'DESC']]
       }),
-      helpers.getPopularUsers(req)
+      sharedServices.getPopularUsers(req)
     ])
       .then(([user, popularUsers]) => {
         if (!user) throw new Error('使用者不存在!')
@@ -168,7 +169,7 @@ const userServices = {
           { model: User, as: 'Followings' }
         ]
       }),
-      helpers.getPopularUsers(req)
+      sharedServices.getPopularUsers(req)
     ])
       .then(([user, popularUsers]) => {
         if (!user) throw new Error('使用者不存在!')
@@ -196,7 +197,7 @@ const userServices = {
         ],
         order: [[Like, 'createdAt', 'DESC']],
       }),
-      helpers.getPopularUsers(req)
+      sharedServices.getPopularUsers(req)
     ])
       .then(([user, popularUsers]) => {
         if (!user) throw new Error('使用者不存在!')
@@ -226,7 +227,7 @@ const userServices = {
           { model: User, as: 'Followings' }
         ]
       }),
-      helpers.getPopularUsers(req)
+      sharedServices.getPopularUsers(req)
     ])
       .then(([user, popularUsers]) => {
         if (!user) throw new Error('使用者不存在!')
@@ -255,7 +256,7 @@ const userServices = {
           { model: User, as: 'Followers' }
         ]
       }),
-      helpers.getPopularUsers(req)
+      sharedServices.getPopularUsers(req)
     ])
       .then(([user, popularUsers]) => {
         if (!user) throw new Error('使用者不存在!')
