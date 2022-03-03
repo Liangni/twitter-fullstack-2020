@@ -282,6 +282,45 @@ const userServices = {
       .then(user => cb(null, { user: user.toJSON() }))
       .catch(err => cb(err))
   },
+  putSetting: (req, cb) => {
+    const { account, name, email, password, passwordCheck } = req.body
+    const userId = Number(req.params.userId)
+    const loginUser = helpers.getUser(req)
+
+    // 檢查使用者是否有編輯權限
+    if (loginUser.id !== userId) throw new Error('你沒有變更權限')
+
+    // 如使用者有輸入密碼或確認密碼，檢查是否一致
+    const isNotEmptyStr = password.trim() || passwordCheck.trim()
+    if (isNotEmptyStr && password !== passwordCheck) throw new Error('密碼與確認密碼不一致！')
+
+    // 檢查是否有其他使用者重複使用表單的帳號或Email
+    return User.findOne({
+      where: {
+        id: { [Op.ne]: loginUser.id },
+        [Op.or]: [{ account }, { email }]
+      }
+    })
+      .then((otherUser) => {
+        // 如其他使用者存在，區分是重複帳號還是Email
+        if (otherUser && otherUser.account === account) throw new Error('account 已重覆註冊！')
+        if (otherUser && otherUser.email === email) throw new Error('email 已重覆註冊！')
+
+        return User.findByPk(userId)
+      })
+      .then((user) => {
+        return user.update({
+          account,
+          name,
+          email,
+          password: password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10), null) : user.password
+        })
+      })
+      .then((user) => {
+        cb(null, { user: user.toJSON() })
+      })
+      .catch(err => cb(err))
+  }
 }
 
 module.exports = userServices
