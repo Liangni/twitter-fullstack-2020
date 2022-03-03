@@ -83,7 +83,7 @@ const userServices = {
     const loginUser = helpers.getUser(req)
     const popularUserId = Number(req.body.id)
     // 登入使用者不行追蹤自己
-    if (loginUser.id === popularUserId) { return res.render('followSelf') }
+    if (loginUser.id === popularUserId) throw new Error('不能跟隨自己!')
 
     return Promise.all([
       User.findByPk(popularUserId),

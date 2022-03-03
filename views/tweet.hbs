@@ -11,13 +11,13 @@
           </a>
         </li>
         <li class="nav-item py-2">
-          <a class="nav-link" href="/users/{{ user.id }}/tweets">
+          <a class="nav-link" href="/users/{{ loginUser.id }}/tweets">
             <i class="far fa-user"></i>
             <span class="ml-3">個人資料</span>
           </a>
         </li>
         <li class="nav-item py-2">
-          <a class="nav-link" href="/users/{{ user.id}}/setting/edit">
+          <a class="nav-link" href="/users/{{ loginUser.id}}/setting/edit">
             <i class="fas fa-cog"></i>
             <span class="ml-3">設定</span>
           </a>
@@ -183,9 +183,9 @@
       <form action="/tweets/{{tweet.id}}/replies" method="POST">
         <div class="type-area d-flex">
           <div>
-            <a href="/users/{{user.id}}/tweets">
-              {{#if user.avatar}}
-              <img src="{{user.avatar}}" class="avatar small ml-1">
+            <a href="/users/{{loginUser.id}}/tweets">
+              {{#if loginUser.avatar}}
+              <img src="{{loginUser.avatar}}" class="avatar small ml-1">
               {{else}}
               <img class="preset-avatar ml-1" src="https://i.imgur.com/iuHA5Qi.jpg">
               {{/if}}

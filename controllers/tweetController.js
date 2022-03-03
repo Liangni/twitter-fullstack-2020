@@ -39,7 +39,7 @@ const tweetController = {
                 }
               }
             })
-            return res.render('tweets', { tweets, popularUsers, user: helpers.getUser(req) })
+            return res.render('tweets', { tweets, popularUsers, loginUser: helpers.getUser(req) })
           })
       })
   },
@@ -59,7 +59,7 @@ const tweetController = {
       tweet.dataValues.isLiked = tweet.LikedUsers.map(u => u.id).includes(helpers.getUser(req).id)
       return res.render('tweet', {
         tweet: tweet.toJSON(),
-        user: helpers.getUser(req),
+        loginUser: helpers.getUser(req),
         popularUsers
       })
     })

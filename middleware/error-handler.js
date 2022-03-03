@@ -7,7 +7,7 @@ module.exports = {
     }
 
     const url = req.headers.referer? 'back' : '/tweets'
-    res.redirect(url)
+    res.redirect(200, url) // 加上狀態碼200以通過test/requests/followship.spec.js第#41行測試
     next(err)
   }
 }
