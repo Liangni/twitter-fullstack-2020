@@ -1,0 +1,36 @@
+<div class="col-3">
+  <img class="mb-4 pl-2" src="https://i.imgur.com/8DjhHxL.png">
+  <div class="nav-ul-wrapper">
+    <ul class="nav flex-column">
+      <li class="nav-item py-2">
+        <a class="nav-link active" href="/">
+          <i class="fas fa-home"></i>
+          <span class="ml-3">首頁</span>
+        </a>
+      </li>
+      <li class="nav-item py-2">
+        <a class="nav-link" href="/users/{{ loginUser.id }}/tweets">
+          <i class="far fa-user"></i>
+          <span class="ml-3">個人資料</span>
+        </a>
+      </li>
+      <li class="nav-item py-2">
+        <a class="nav-link" href="/users/{{ loginUser.id}}/setting/edit">
+          <i class="fas fa-cog"></i>
+          <span class="ml-3">設定</span>
+        </a>
+      </li>
+      <li class="nav-item py-2">
+        <button type="button" class="btn tweet-button" data-toggle="modal" data-target="#tweetModal">推文</button>
+      </li>
+    </ul>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="ml-3">登出</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
