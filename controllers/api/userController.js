@@ -13,39 +13,27 @@ const userController = {
       .then(user => res.json(user.toJSON()))
       .catch(err => next(err))
   },
-  postUser: (req, res) => {
+  postUser: (req, res, next) => {
     const { name, introduction } = req.body
     const { files } = req
 
-    if (files) {
-      Promise.all([
-        fileHelpers.getImgurLink(files.cover),
-        fileHelpers.getImgurLink(files.avatar),
-        User.findByPk(req.params.userId)
-      ])
-        .then(([coverLink, avatarLink, user]) => {
-          return user.update({
-            name,
-            introduction,
-            cover: files.cover ? coverLink : user.cover,
-            avatar: files.avatar ? avatarLink : user.avatar
-          })
+    return Promise.all([
+      fileHelpers.getImgurLink(files?.cover || null),
+      fileHelpers.getImgurLink(files?.avatar || null),
+      User.findByPk(req.params.userId)
+    ])
+      .then(([coverLink, avatarLink, user]) => {
+        return user.update({
+          name,
+          introduction,
+          cover: coverLink || user.cover,
+          avatar: avatarLink || user.avatar
         })
-        .then((user) => {
-          return res.json({ status: 'success', message: '更新個人資料頁成功！' })
-        })
-    } else {
-      return User.findByPk(req.params.userId)
-        .then((user) => {
-          return user.update({
-            name,
-            introduction,
-          })
-        })
-        .then((user) => {
-          return res.json({ status: 'success', message: '更新個人資料頁成功！' })
-        })
-    }
+      })
+      .then((user) => {
+        return res.json({ status: 'success', message: '更新個人資料頁成功！' })
+      })
+      .catch(err => next(err))
   },
 }
 
