@@ -3,17 +3,7 @@
 
   {{!-- user profile --}}
   <div class="middle-side col-md-5">
-    <div class="text-title d-flex align-items-center">
-      <a href="javascript:history.back()">
-        <div class="back-icon">
-          <i class="fas fa-arrow-left"></i>
-        </div>
-      </a>
-      <div class="name-info ">
-        <h5 class="header1 ml-3 mb-0">{{user.name}}</h5>
-        <div class="atAccount ml-3 mb-1">{{user.Tweets.length}} 推文</div>
-      </div>
-    </div>
+    {{>breadcrumbs}}
     {{!-- user-photos --}}
     <div class="image-wrapper mb-4">
       {{!-- cover --}}

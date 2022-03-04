@@ -2,17 +2,7 @@
   {{>navbar}}
 
   <div class="middle-side col-md-5">
-    <div class="text-title d-flex align-items-center">
-      <a href="javascript:history.back()">
-        <div class="back-icon">
-          <i class="fas fa-arrow-left"></i>
-        </div>
-      </a>
-      <div class="name-info">
-        <h5 class="title-name ml-3">{{user.name}}</h5>
-        <div class="title-info ml-3">{{user.Tweets.length}} 推文</div>
-      </div>
-    </div>
+    {{>breadcrumbs}}
     <br>
 
     <div class="follow-tweet">
