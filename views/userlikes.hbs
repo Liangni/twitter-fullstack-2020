@@ -1,76 +1,12 @@
 <div class="row" style="width:100%;">
   {{>navbar}}
 
-  {{!-- user profile --}}
   <div class="middle-side col-md-5">
     {{>breadcrumbs}}
-    {{!-- user-photos --}}
-    <div class="image-wrapper mb-4">
-      {{!-- cover --}}
-      <div class="cover-wrapper">
-        {{#if user.cover}}
-        <img class="cover" src="{{ user.cover }}" alt="">
-        {{ else }}
-        <div class="cover none"></div>
-        {{/if}}
-      </div>
-      {{!-- avatar --}}
-      <div class="avatar-wrapper">
-        {{#if user.avatar }}
-        <img class="avatar large" src="{{ user.avatar }}">
-        {{else}}
-        <img class="preset-avatar-large" src="https://i.imgur.com/iuHA5Qi.jpg">
-        {{/if}}
-      </div>
-      {{!-- edit-user-button --}}
-      <div class="d-flex justify-content-end mt-1 pr-1" id="user-profile-control-panel">
-        {{#ifCond loginUser.id user.id }}
-        <button type="button" class="btn btn-outline ml-2" id="edit-user-button" data-user-id="{{ user.id }}" data-toggle="modal"
-          data-target="#editUserModal">
-          編輯個人資料
-        </button>
-        {{else}}
-        <div class="icon-outline pt-1">
-          <a href="{{ user.email }}"><i class="far fa-envelope"></i></a>
-        </div>
-        {{#if isFollowed}}
-        <form action="/followships/{{user.id}}?_method=DELETE" method="POST">
-          <button type="submit" class="btn followings-button mr-3">正在跟隨</button>
-        </form>
-        {{else}}
-        <form action="/followships" method="POST">
-          <button type="submit" class="btn followers-button mr-3">跟隨</button>
-          <input type="hidden" name="id" value="{{user.id}}">
-        </form>
-        {{/if}}
-        {{/ifCond}}
-      </div>
-    </div>
-    {{!-- user-intro --}}
+    {{>userProfile}}
+    <br>
+  
     <div class="text-info-users">
-      <div class="info-text">
-        <h5 class="name header1">{{user.name}}</h5>
-        <h6 class="atAccount">@{{user.account}}</h6>
-        {{#if user.introduction}}
-        <div class="introduction mt-2">{{ user.introduction }}</div>
-        {{else}}
-        <div class="introduction mt-2">目前沒有自我介紹!</div>
-        {{/if}}
-        <div class="follow d-flex">
-          <div class="followship d-flex m-0 mt-2">
-            <a href="followings" class="d-flex">
-              <div class="follow-title">{{user.Followings.length}} 個</div>
-              <div class="following-body">跟隨中</div>
-            </a>
-            <a href="followers" class="d-flex ml-3">
-              <div class="follow-title">{{user.Followers.length}} 個</div>
-              <div class="follower-body">跟隨者</div>
-            </a>
-          </div>
-        </div>
-      </div>
-      {{!-- tab-area --}}
-      <br>
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a class="nav-link" href="/users/{{user.id}}/tweets">推文</a>
@@ -141,5 +77,3 @@
 
   {{>popular}}
 </div>
-
-<script src="/javascripts/userProfile.js"></script>
