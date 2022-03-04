@@ -1,6 +1,3 @@
-const bcrypt = require('bcryptjs')
-const { Op } = require('sequelize')
-const helpers = require('../_helpers')
 const userServices = require('../services/user-services')
 
 
@@ -74,7 +71,7 @@ const userController = {
   },
   // 瀏覽帳號設定頁面
   settingPage: (req, res, next) => {
-    userServices.settingPage(req, (err, data) => { err? next(err) :  res.render('setting', data)})
+    userServices.getUser(req, (err, data) => { err? next(err) :  res.render('setting', data)})
   },
   // 更新帳號設定
   putSetting: (req, res, next) => {

@@ -275,7 +275,7 @@ const userServices = {
       })
       .catch(err => cb(err))
   },
-  settingPage: (req, cb) => {
+  getUser: (req, cb) => {
     const loginUser = helpers.getUser(req)
     const userId = Number(req.params.userId)
     if (loginUser.id !== userId) throw new Error('你沒有檢視此頁面的權限')

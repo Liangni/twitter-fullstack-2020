@@ -1,17 +1,11 @@
-const db = require('../../models')
-const User = db.User
+const { User } = require('../../models')
+const userServices = require('../../services/user-services')
 const helpers = require('../../_helpers')
 const fileHelpers = require('../../helpers/file-helpers')
 
 const userController = {
   getUser: (req, res, next) => {
-    const loginUser = helpers.getUser(req)
-    const userId = Number(req.params.userId)
-    if (loginUser.id !== userId) throw new Error('你沒有檢視此頁面的權限')
-    
-    return User.findByPk(userId)
-      .then(user => res.json(user.toJSON()))
-      .catch(err => next(err))
+    userServices.getUser(req, (err, data) => { err? next(err) : res.json(data.user) })
   },
   postUser: (req, res, next) => {
     const { name, introduction } = req.body
