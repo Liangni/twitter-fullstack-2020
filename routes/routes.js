@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('../config/passport')
 const { authenticated, authenticatedAdmin } = require('../middleware/auth')
-const { generalErrorHandler } = require('../middleware/error-handler')
+const { followSelfErrorHandler, generalErrorHandler } = require('../middleware/error-handler')
 
 const userController = require('../controllers/userController')
 const adminController = require('../controllers/adminController')
@@ -52,6 +52,7 @@ router.delete('/followships/:followingId', authenticated, userController.removeF
 router.get('/users/:userId/setting/edit', authenticated, userController.settingPage)
 router.put('/users/:userId/setting', authenticated, userController.putSetting)
 
-router.use('/', generalErrorHandler )
+// Error Handlers
+router.use('/', followSelfErrorHandler, generalErrorHandler )
   
 module.exports = router
