@@ -4,14 +4,14 @@ const helpers = require('../../_helpers')
 const fileHelpers = require('../../helpers/file-helpers')
 
 const userController = {
-  getUser: (req, res) => {
-    if (helpers.getUser(req).id !== Number(req.params.userId)) {
-      return res.json({ status: 'error', message: '' })
-    }
-    return User.findByPk(req.params.userId)
-      .then(user => {
-        return res.json(user.toJSON())
-      })
+  getUser: (req, res, next) => {
+    const loginUser = helpers.getUser(req)
+    const userId = Number(req.params.userId)
+    if (loginUser.id !== userId) throw new Error('你沒有檢視此頁面的權限')
+    
+    return User.findByPk(userId)
+      .then(user => res.json(user.toJSON()))
+      .catch(err => next(err))
   },
   postUser: (req, res) => {
     const { name, introduction } = req.body
