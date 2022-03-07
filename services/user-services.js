@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const { User, Tweet, Like, Followship, Reply } = require('../models')
 const helpers = require('../_helpers')
 const sharedServices = require('./shared-services')
+const fileHelpers = require('../helpers/file-helpers')
 
 const userServices = {
   signUp: (req, cb) => {
@@ -282,6 +283,31 @@ const userServices = {
 
     return User.findByPk(userId)
       .then(user => cb(null, { user: user.toJSON(), loginUser }))
+      .catch(err => cb(err))
+  },
+  postUser: (req, cb) => {
+    const { name, introduction } = req.body
+    const { files } = req
+    const loginUser = helpers.getUser(req)
+    const userId = Number(req.params.userId)
+    if (loginUser.id !== userId) throw new Error('你沒有權限進行此操作')
+    
+    return Promise.all([
+      fileHelpers.getImgurLink(files?.cover || null),
+      fileHelpers.getImgurLink(files?.avatar || null),
+      User.findByPk(userId)
+    ])
+      .then(([coverLink, avatarLink, user]) => {
+        return user.update({
+          name,
+          introduction,
+          cover: coverLink || user.cover,
+          avatar: avatarLink || user.avatar
+        })
+      })
+      .then((user) => {
+        return cb(null, { user })
+      })
       .catch(err => cb(err))
   },
   putSetting: (req, cb) => {
