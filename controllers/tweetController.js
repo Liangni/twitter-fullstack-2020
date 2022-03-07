@@ -33,7 +33,7 @@ const tweetController = {
   },
 
   //前台瀏覽個別推文
-  getTweet: (req, res) => {
+  getTweet: (req, res, next) => {
     return Promise.all([
       Tweet.findByPk(req.params.id, {
         include: [
@@ -43,14 +43,20 @@ const tweetController = {
         ]
       }),
       sharedServices.getPopularUsers(req)
-    ]).then(([tweet, popularUsers]) => {
-      tweet.dataValues.isLiked = tweet.LikedUsers.map(u => u.id).includes(helpers.getUser(req).id)
+    ])
+    .then(([tweet, popularUsers]) => {
+      if (!tweet) throw new Error('貼文不存在!')
+      
+      const loginUser = helpers.getUser(req)
+      const likedTweetIds = loginUser.LikedTweets ? loginUser.LikedTweets.map(tweet => tweet.id) : []
+      tweet.dataValues.isLiked = likedTweetIds.includes(tweet.id)
       return res.render('tweet', {
         tweet: tweet.toJSON(),
-        loginUser: helpers.getUser(req),
+        loginUser,
         popularUsers
       })
     })
+    .catch(err => next(err))
   },
   //新增推文
   postTweet: (req, res) => {
