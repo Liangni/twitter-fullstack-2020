@@ -59,21 +59,17 @@ const tweetController = {
     .catch(err => next(err))
   },
   //新增推文
-  postTweet: (req, res) => {
-    if (req.body.description.length > 140) {
-      req.flash('error_messages', '字數不可超過140字')
-      return res.redirect('back')
-    }
-    if (req.body.description.length < 1) {
-      req.flash('error_messages', '內容不可為空白')
-      return res.redirect('back')
-    }
+  postTweet: (req, res, next) => {
+    const { description } = req.body
+    if (description.length > 140) throw new Error('字數不可超過140字')
+    if (description.length < 1) throw new Error('內容不可為空白')
+      
     Tweet.create({
-      description: req.body.description,
+      description,
       UserId: helpers.getUser(req).id
-    }).then(tweets => {
-      return res.redirect('/tweets')
     })
+    .then(() => res.redirect('/tweets') )
+    .catch(err => next(err))
   }
 }
 
