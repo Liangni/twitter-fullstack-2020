@@ -8,40 +8,28 @@ const sharedServices = require('../services/shared-services')
 
 const tweetController = {
 
-  getTweets: (req, res) => {
-    return Tweet.findAll({
-      order: [['createdAt', 'DESC']],
-      include: [
-        User,
-        Reply,
-        { model: User, as: 'LikedUsers' }
-      ]
-    })
-      .then(tweets => {
-        // 撈 popular view 的資料
-        return sharedServices.getPopularUsers(req)
-          .then(popularUsers => {
-            tweets = tweets.map(tweet => {
-              if (tweet.dataValues !== undefined) {
-                return {
-                  ...tweet.dataValues,
-                  loginUser: helpers.getUser(req),
-                  tweetsUserAvatar: tweet.dataValues.User.avatar,
-                  tweetsUserName: tweet.User.name,
-                  tweetsUserAccount: tweet.User.account,
-                  tweetsCreatedAt: tweet.createdAt,
-                  tweetUserId: tweet.User.id,
-                  tweetsId: tweet.id,
-                  tweetsContent: tweet.description,
-                  isLiked: tweet.LikedUsers.map(item => item.id).includes(helpers.getUser(req).id),
-                  replyTotal: tweet.Replies.length,
-                  likeTotal: tweet.LikedUsers.length
-                }
-              }
-            })
-            return res.render('tweets', { tweets, popularUsers, loginUser: helpers.getUser(req) })
-          })
+  getTweets: (req, res, next) => {
+    return Promise.all([
+      Tweet.findAll({
+        order: [['createdAt', 'DESC']],
+        include: [
+          User,
+          Reply,
+          { model: User, as: 'LikedUsers' }
+        ]
+      }),
+      sharedServices.getPopularUsers(req)
+    ])
+      .then(([tweets, popularUsers]) => {
+        const loginUser = helpers.getUser(req)
+        const likedTweetIds = loginUser.LikedTweets ? loginUser.LikedTweets.map(tweet => tweet.id) : []
+        const tweetsData = tweets.map(tweet => ({
+          ...tweet.dataValues,
+          isLike: likedTweetIds.includes(tweet.id)
+        }))
+        return res.render('tweets', { tweets: tweetsData, popularUsers, loginUser })
       })
+      .catch(err => next(err))
   },
 
   //前台瀏覽個別推文

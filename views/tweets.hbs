@@ -27,42 +27,42 @@
       <div class="card">
         {{#each tweets}}
         <div class="card-body d-flex">
-          <a href="/users/{{this.UserId}}/tweets">
-            {{#if this.tweetsUserAvatar}}
-            <img class="avatar small mr-3" src="{{this.tweetsUserAvatar}}">
+          <a href="/users/{{this.User.id}}/tweets">
+            {{#if this.User.avatar}}
+            <img class="avatar small mr-3" src="{{this.User.avatar}}">
             {{else}}
             <img class="preset-avatar mr-3" src="https://i.imgur.com/iuHA5Qi.jpg">
             {{/if}}
           </a>
           <div>
-            <p class="user-name">{{this.tweetsUserName}}
-              <span class="atAccount">@{{this.tweetsUserAccount}}•{{moment
-                this.tweetsCreatedAt}}</span>
+            <p class="user-name">{{this.User.name}}
+              <span class="atAccount">@{{this.User.account}}•{{moment
+                this.createdAt}}</span>
             </p>
-            <a href="/tweets/{{this.tweetsId}}/replies" class="text-muted">
-              <p class="post-text">{{this.tweetsContent}}</p>
+            <a href="/tweets/{{this.id}}/replies" class="text-muted">
+              <p class="post-text">{{this.description}}</p>
             </a>
             <div class="d-flex">
               <div class="reply" style="color: #657786;" id="reply" data-toggle="modal"
-                data-target="#exampleModal-reply{{this.tweetsId}}">
+                data-target="#exampleModal-reply{{this.id}}">
                 <i class="far fa-comment"></i>
-                <span class="ml-2 mr-4">{{this.replyTotal}}</span>
+                <span class="ml-2 mr-4">{{this.replyCounts}}</span>
               </div>
               <div class="likeBtn">
                 {{!-- unlike tweet --}}
                 {{#if this.isLiked}}
-                <form action='/tweets/{{this.tweetsId}}/unlike' method="POST">
+                <form action='/tweets/{{this.id}}/unlike' method="POST">
                   <button class="push-button like-icon ml-4" type="submit">
                     <i class="fas fa-heart"></i>
-                    <span class="ml-2">{{ this.likeTotal }}</span>
+                    <span class="ml-2">{{ this.likeCounts }}</span>
                   </button>
                 </form>
                 {{else}}
                 {{!-- Like tweet --}}
-                <form action='/tweets/{{this.tweetsId}}/like' method="POST">
+                <form action='/tweets/{{this.id}}/like' method="POST">
                   <button class="like-button ml-4" type="submit">
                     <i class="far fa-heart"></i>
-                    <span class="ml-2">{{ this.likeTotal }}</span>
+                    <span class="ml-2">{{ this.likeCounts }}</span>
                   </button>
                 </form>
                 {{/if}}
@@ -73,7 +73,7 @@
         <hr />
 
         {{!-- replyModal --}}
-        <div class="modal fade" id="exampleModal-reply{{this.tweetsId}}" tabindex="-1" role="dialog"
+        <div class="modal fade" id="exampleModal-reply{{this.id}}" tabindex="-1" role="dialog"
           aria-labelledby="reply-tweet" style="display: none;" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content d-flex">
@@ -84,9 +84,9 @@
                 <div class="reply-modal-tweet d-flex">
                   <div class="mt-2" style="padding: 0%;">
                     <div>
-                      <a href="/users/{{this.tweetUserId}}/tweets">
-                        {{#if this.tweetsUserAvatar}}
-                        <img src="{{this.tweetsUserAvatar}}" class="avatar 
+                      <a href="/users/{{this.User.id}}/tweets">
+                        {{#if this.User.avatar}}
+                        <img src="{{this.User.avatar}}" class="avatar 
                         small ml-1">
                         {{else}}
                         <img class="preset-avatar ml-1" src="https://i.imgur.com/iuHA5Qi.jpg">
@@ -97,37 +97,37 @@
                   </div>
                   <div class="mt-2" style="flex-grow: 1; position:relative">
                     <div class="account-info d-flex" style="flex:auto">
-                      <a href="/users/{{this.tweetUserId}}/tweets">
-                        <div class="modal-name ml-3">{{this.tweetsUserName}}</div>
+                      <a href="/users/{{this.User.id}}/tweets">
+                        <div class="modal-name ml-3">{{this.User.name}}</div>
                       </a>
-                      <div class="atAccount modal-info ml-2">@{{this.tweetsUserAccount}}•{{moment
-                        this.tweetsCreatedAt}}</div>
+                      <div class="atAccount modal-info ml-2">@{{this.User.account}}•{{moment
+                        this.createdAt}}</div>
                     </div>
                     <p class="modal-description d-flex ml-3" style="flex: auto">
-                      {{this.tweetsContent}}
+                      {{this.description}}
                     </p>
                     <div class="reply d-flex" style="margin-left">
                       <div class="reply-text ml-3 mb-2">回覆給</div>
-                      <a href="/users/{{this.tweetUserId}}/tweets">
-                        <div class="reply-account ml-2">@{{this.tweetsUserAccount}}</div>
+                      <a href="/users/{{this.User.id}}/tweets">
+                        <div class="reply-account ml-2">@{{this.User.account}}</div>
                       </a>
                     </div>
                   </div>
                 </div>
               </div>
-              <form action="/tweets/{{this.tweetsId}}/replies" method="POST">
+              <form action="/tweets/{{this.id}}/replies" method="POST">
                 <div class="type-area d-flex">
                   <div>
-                    <a href="/users/{{this.loginUser.id}}/tweets">
-                      {{#if this.loginUser.avatar}}
-                      <img src="{{this.loginUser.avatar}}" class="avatar small ml-1">
+                    <a href="/users/{{../loginUser.id}}/tweets">
+                      {{#if ../loginUser.avatar}}
+                      <img src="{{../loginUser.avatar}}" class="avatar small ml-1">
                       {{else}}
                       <img class="preset-avatar ml-1" src="https://i.imgur.com/iuHA5Qi.jpg">
                       {{/if}}
                     </a>
                   </div>
                   <div class="type-text form-group">
-                    <input type="hidden" name="TweetId" value="{{this.tweetsId}}">
+                    <input type="hidden" name="TweetId" value="{{this.id}}">
                     <textarea type="text" class="form-control new-post-content ml-2" name="comment" id="comment-modal"
                       placeholder="推你的回覆" rows="5" cols="47" maxlength="140"></textarea>
                     <div class="invalid-feedback" id="reply-tweet"></div>
