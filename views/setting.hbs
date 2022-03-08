@@ -2,7 +2,7 @@
 {{>navbar}}
 
   {{!-- content --}}
-  <div class="col-md-9 content-container">
+  <div class="col-6 content-container">
     <form class="form-signin" action="/users/{{ user.id }}/setting?_method=PUT" method="POST" style="width: 100%;">
       <div class="text-center">
         <div class="setting-title mt-2 ml-3">帳戶設定</div>
@@ -42,7 +42,7 @@
           style="max-width: 642px; font-weight: 500; font-size: 16px; color: #1c1c1c;" placeholder="請再次輸入密碼">
       </div>
       <br />
-      <div class="d-flex pr-1">
+      <div class="d-flex justify-content-end pr-1">
         <button class="btn setting-button mr-3" type="submit">儲存</button>
       </div>
     </form>

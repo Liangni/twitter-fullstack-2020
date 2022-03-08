@@ -138,38 +138,25 @@ html, body {
 .form-signin{
   margin: auto;
 }
-.logo {
-  display: flex;
-  justify-content: center;
-}
+
 .sign-title {
-  margin-top: 2%;
   font-style: normal;
   font-weight: bold;
   font-size: 23px;
   line-height: 33px;
-}
-.form-label-group {
-  margin-top: 3%;
-  margin-left: 18%;
 }
 .form-label-groups {
   margin-top: 3%;
   margin-left: 30.9%;
 }
 .form-control {
-  max-width: 540px;
-  height: 52px;
-  left: 450px;
+  min-height: 52px;
   background: #F5F8FA;
   border-radius: 0px 0px 4px 4px;
   border: none;
   border-bottom: solid 2px #657786;
 }
-.text-center-signup {
-  display: flex;
-  justify-content: right;
-  margin-right: 18%;
+.text-signup {
   font-style: normal;
   font-weight: bold;
   font-size: 18px;
@@ -219,22 +206,11 @@ html, body {
   line-height: 18px;
   color:#FFFFFF;
 }
-
-.siginin-button {
-  margin-left:18.5%;
-  width: 540px;
-  height: 46px;
-  left: 450px;
-  top: 381px;
+.signin-button, .signup-button  {
+  width: 100%;
+  line-height: 26px;
 }
 
-.signup-button {
-  margin-left: 31.2%;
-  width: 540px;
-  height: 46px;
-  left: 450px;
-  top: 633px;
-}
 
 .btn-outline {
   background: #FFFFFF;
@@ -558,7 +534,6 @@ img.avatar.large {
   border-bottom: 2px solid #FF6600;
 }
 .content-container {
-  top: -15px;
   padding: 0%;
   border-left: 1px solid #e6ecf0;
   box-sizing: border-box;
@@ -572,7 +547,6 @@ img.avatar.large {
   color: #1C1C1C;
 }
 .setting-button {
-  position: relative;
   width: 116px;
   height: 46px;
   left: 420px;

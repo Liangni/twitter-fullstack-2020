@@ -1,6 +1,6 @@
 const account = document.querySelector("#account")
 const password = document.querySelector("#password")
-const signInButton = document.querySelector(".siginin-button")
+const signInButton = document.querySelector(".signin-button")
 
 account.addEventListener('input', function check(event) {
   if (account.value.length > 0) {
