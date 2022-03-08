@@ -25,7 +25,7 @@ passport.use(new LocalStrategy(
       // if normal login && role !== normal , return 無法進入此頁面
       if (req.path === '/signin' && user.role !== 'normal') return cb(null, false, req.flash('error_messages', '無法進入此頁面!'))
       if (!bcrypt.compareSync(password, user.password)) return cb(null, false, req.flash('error_messages', '密碼輸入錯誤'))
-      
+
       return cb(null, user)
     })
   }
