@@ -13,7 +13,7 @@ module.exports = {
         updatedAt: new Date(),
         likeCounts: 0 ,
         replyCounts: 3 ,
-        UserId: i % 5 + 2
+        UserId: Math.floor(Math.random() * 6) + 1
       })
 
       ), {})
