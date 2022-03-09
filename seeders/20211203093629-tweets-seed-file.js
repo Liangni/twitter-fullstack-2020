@@ -13,7 +13,7 @@ module.exports = {
         updatedAt: new Date(),
         likeCounts: 0 ,
         replyCounts: 3 ,
-        UserId: Math.floor(Math.random() * 6) + 1
+        UserId: Math.floor(Math.random() * 5) + 2 // 跳過root(id=1)，使2 <= id < 7
       })
 
       ), {})
