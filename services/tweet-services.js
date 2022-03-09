@@ -20,9 +20,9 @@ const tweetServices = {
         const likedTweetIds = loginUser.LikedTweets ? loginUser.LikedTweets.map(tweet => tweet.id) : []
         const tweetsData = tweets.map(tweet => ({
           ...tweet.dataValues,
-          isLike: likedTweetIds.includes(tweet.id)
+          isLiked: likedTweetIds.includes(tweet.id)
         }))
-        return cb(null, { tweets: tweetsData, popularUsers, loginUser }) 
+        return cb(null, { tweets: tweetsData, popularUsers, loginUser })
       })
       .catch(err => cb(err))
   },
