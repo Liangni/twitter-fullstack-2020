@@ -1,6 +1,7 @@
-{{!-- 左邊選項欄位 --}}
-<div class="row col-md-12">
-  <div class="admin-left col-md-3 ml-4">
+<div class="row" style="width:100%;">
+
+  {{!-- 左邊選項欄位 --}}
+  <div class="col-3">
     <img class="mb-4 pl-2" src="https://i.imgur.com/8DjhHxL.png">
     <div class="nav-ul-wrapper">
       <ul class="nav flex-column">
@@ -31,7 +32,7 @@
 
   {{!-- 右邊清單欄位 --}}
   {{!-- 會用到 avatar,name,account,createdAt,description --}}
-  <div class="col-md-10 admin-content">
+  <div class="col-9">
     <p class="admin-tweets-title ml-3 mt-3">推文清單</p>
     <hr />
 
@@ -58,3 +59,5 @@
       {{/each}}
     </div>
   </div>
+
+</div>
