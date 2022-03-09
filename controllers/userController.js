@@ -55,7 +55,7 @@ const userController = {
     userServices.getUserReplies(req, (err, data) => { err ? next(err) : res.render('userReplies', data) })
   },
   getUserLikes: (req, res, next) => {
-    userServices.getUserLikes(req, (err, data) => { err? next(err) : res.render('userLikes', data) })
+    userServices.getUserLikes(req, (err, data) => { err? next(err) : res.render('userlikes', data) })
   },
   // 瀏覽 user 的 followings
   getUserFollowing: (req, res, next) => {
