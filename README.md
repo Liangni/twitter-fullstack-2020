@@ -1,7 +1,6 @@
 # Simple Twitter
 使用Express及Mysql 打造出來的一個簡單的社群網站。
 
-![image](/public/images/Simple-Twitter-1.PNG)
 ![image](/public/images/Simple-Twitter-2.PNG)
 ![image](/public/images/Simple-Twitter-3.PNG)
 
@@ -26,23 +25,6 @@
 * 使用者可以喜愛推文。
 * 使用者可以在頁面右邊看到熱門的使用者。
 
-## 環境建置
-* Express: ^4.16.4
-* Express-handlebars: ^3.0.0
-* Express-session: ^1.17.2
-* mysql2: ^1.6.4
-* passport: ^0.4.1
-* passport-local: ^1.0.0
-* sequelize: ^4.44.4
-* sequelize-cli: ^5.5.0
-* body-parser: ^1.19.0
-* method-override: ^3.0.0
-* connect-flash: ^0.1.1
-* faker: ^4.1.0
-* imgur-node-api: ^0.1.0
-* bcryptjs: ^2.4.3
-* multer: ^1.4.3
-* moment: ^2.29.1
 
 ## 專案安裝
 1. 下載專案
