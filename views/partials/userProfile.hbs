@@ -23,7 +23,8 @@
       編輯個人資料
     </button>
     {{else}}
-    <div class="icon-outline pt-1">
+    {{!-- 待開發訊息功能，先hide按鈕 --}}
+    <div class="icon-outline pt-1 hide">
       <a href="{{ user.email }}"><i class="far fa-envelope"></i></a>
     </div>
     {{#if isFollowed}}
