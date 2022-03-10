@@ -81,4 +81,4 @@ Example app listening on port 3000!
 * github儲存庫： [https://github.com/ZinXianY/twitter-fullstack-2020](https://github.com/ZinXianY/twitter-fullstack-2020)
 * 網站連結：[https://cryptic-spire-71023.herokuapp.com](https://cryptic-spire-71023.herokuapp.com)
 
-2021年12月25號後的版本，也就是本儲存庫儲存的版本，是由Penny Pan獨立開發與優化後推出，詳細版本變更請見本儲存庫commit紀錄。
+2021年12月25號後的版本，是由Penny Pan優化後推出，詳細版本變更請見本儲存庫commit紀錄。
