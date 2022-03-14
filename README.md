@@ -50,35 +50,40 @@ cd twitter-fullstack-2020
 npm install
 ```
 
-4. 創建資料庫
+4. 建立.env 檔，並參考.env.example輸入環境變數
+```
+touch .env
+```
+
+5. 創建資料庫
 ```
 create database ac_twitter_workspace;
 ```
 
-5. 建立 migration
+6. 建立 migration
 ```
 npx sequelize db:migrate
 ```
 
-6. 建立 seeder
+7. 建立 seeder
 ```
 npx sequelize db:seed:all
 ```
 
-7. 啟動伺服器執行檔案
+8. 啟動伺服器執行檔案
 ```
 npm run dev
 ```
 
-8. 出現以下字樣表示啟動成功!
+9. 出現以下字樣表示啟動成功!
 ```
 Example app listening on port 3000!
 ```
 
 ## 開發人員
-本專案最初由Penny Pan（本儲存庫持有者）、[信](https://github.com/Sin0001)、[Zin](https://github.com/ZinXianY) 共同開發，並於2021年12月25號部署上線。初版專案儲存庫與網站連結如下：
+本專案最初由Penny Pan（本儲存庫持有者）、[信](https://github.com/Sin0001)、[Zin](https://github.com/ZinXianY) 共同開發，並於2021年12月25號部署上線。初版專案與網站連結如下：
 
 * github儲存庫： [https://github.com/ZinXianY/twitter-fullstack-2020](https://github.com/ZinXianY/twitter-fullstack-2020)
 * 網站連結：[https://cryptic-spire-71023.herokuapp.com](https://cryptic-spire-71023.herokuapp.com)
 
-2021年12月25號後的版本，是由Penny Pan優化後推出，詳細版本變更請見本儲存庫commit紀錄。
+2021年12月25號後的版本是由Penny Pan優化後推出，詳細版本變更請見本儲存庫commit紀錄。
