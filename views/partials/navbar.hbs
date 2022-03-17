@@ -3,19 +3,19 @@
   <div class="nav-ul-wrapper pl-3">
     <ul class="nav flex-column">
       <li class="nav-item py-2">
-        <a class="nav-link" href="/">
+        <a class="nav-link {{#ifCond route 'tweets'}}active{{/ifCond}}" href="/">
           <i class="fas fa-home"></i>
           <span class="ml-3">首頁</span>
         </a>
       </li>
       <li class="nav-item py-2">
-        <a class="nav-link" href="/users/{{ loginUser.id }}/tweets">
+        <a class="nav-link {{#ifCond route 'users'}}active{{/ifCond}}" href="/users/{{ loginUser.id }}/tweets">
           <i class="far fa-user"></i>
           <span class="ml-3">個人資料</span>
         </a>
       </li>
       <li class="nav-item py-2">
-        <a class="nav-link" href="/users/{{ loginUser.id}}/setting/edit">
+        <a class="nav-link {{#ifCond route 'setting'}}active{{/ifCond}}" href="/users/{{ loginUser.id}}/setting/edit">
           <i class="fas fa-cog"></i>
           <span class="ml-3">設定</span>
         </a>
@@ -36,5 +36,3 @@
 </div>
 
 {{> tweetModal }}
-
-<script src="/javascripts/navbar.js"></script>
