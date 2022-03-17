@@ -6,7 +6,7 @@
     {{>userProfile}}
     <br>
     <div class="text-info-users">
-      {{>userTabs}}
+      {{>userTabs route='userReplies'}}
       <div class="user-tweet">
         {{#if user.Replies}}
         {{#each user.Replies}}

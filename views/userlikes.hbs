@@ -6,7 +6,7 @@
     {{>userProfile}}
     <br>
     <div class="text-info-users">
-      {{>userTabs}}
+      {{>userTabs route='userLikes'}}
       <div class="user-tweet">
         {{#if userLikedTweets }}
         {{#each userLikedTweets}}
